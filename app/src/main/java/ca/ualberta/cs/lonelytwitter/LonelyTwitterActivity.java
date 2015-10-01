@@ -30,8 +30,11 @@ public class LonelyTwitterActivity extends Activity {
 	private static final String FILENAME = "file.sav";
 	private EditText bodyText;
 	private ListView oldTweetsList;
-	private ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+	private TweetList tweetList = new TweetList();
 	private ArrayAdapter<Tweet> adapter;
+
+	private ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+
 
 	/** Called when the activity is first created. */
 	@Override
@@ -50,7 +53,7 @@ public class LonelyTwitterActivity extends Activity {
 			public void onClick(View v) {
 				setResult(RESULT_OK);
 				String text = bodyText.getText().toString();
-				tweets.add(new NormalTweet(text));
+				tweetList.addTweet(new NormalTweet(text));
 				saveInFile();
 				adapter.notifyDataSetChanged();
 			}
