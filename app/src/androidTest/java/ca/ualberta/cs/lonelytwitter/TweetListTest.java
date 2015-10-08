@@ -7,7 +7,8 @@ import java.util.ArrayList;
 /**
  * Created by akmcinto on 9/30/15.
  */
-public class TweetListTest extends ActivityInstrumentationTestCase2 {
+public class TweetListTest extends ActivityInstrumentationTestCase2 implements MyObserver {
+    private boolean wasNotified;
 
     public TweetListTest() {
         super(LonelyTwitterActivity.class);
@@ -79,4 +80,17 @@ public class TweetListTest extends ActivityInstrumentationTestCase2 {
         assertTrue(sortedTweets.get(0).getDate().before(sortedTweets.get(1).getDate()));
     }
 
+    public void testTweetListChanged() {
+        wasNotified = false;
+        TweetList tweetList = new TweetList();
+        Tweet tweet = new NormalTweet("hello!");
+        tweetList.addObserver(this);
+        assertFalse(wasNotified);
+        tweetList.addTweet(tweet);
+        assertTrue(wasNotified);
+    }
+
+    public void myNotify() {
+        wasNotified = true;
+    }
 }

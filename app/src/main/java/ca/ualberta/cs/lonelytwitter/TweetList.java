@@ -7,8 +7,8 @@ import java.util.Comparator;
 /**
  * Created by akmcinto on 9/30/15.
  */
-public class TweetList {
-
+public class TweetList implements MyObservable {
+    private ArrayList<MyObserver> myObservers = new ArrayList<MyObserver>();
     private ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 
     public void addTweet(Tweet tweet) {
@@ -17,6 +17,7 @@ public class TweetList {
         }
         else {
             tweets.add(tweet);
+            notifyObservers();
         }
     }
 
@@ -51,4 +52,14 @@ public class TweetList {
         return tweets.size();
     }
 
+
+    public void notifyObservers() {
+        for (MyObserver observer : myObservers) {
+            observer.myNotify();
+        }
+    }
+
+    public void addObserver(MyObserver observer) {
+        myObservers.add(observer);
+    }
 }
