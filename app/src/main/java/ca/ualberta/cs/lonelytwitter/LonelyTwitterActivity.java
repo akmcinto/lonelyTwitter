@@ -12,8 +12,10 @@ import java.lang.reflect.Type;  // Model
 import java.util.ArrayList;  // Model
 
 import android.app.Activity;  // Model
+import android.content.Intent;
 import android.os.Bundle;  // Model
 import android.view.View;  // Model
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;  // Model
 import android.widget.Button;  // Model
 import android.widget.EditText;  // Model
@@ -27,10 +29,23 @@ public class LonelyTwitterActivity extends Activity {  // View/Controller
 	private static final String FILENAME = "file.sav"; // Model
 	private EditText bodyText; // View
 	private ListView oldTweetsList; // View
-	private TweetList tweetList = new TweetList(); // Model
 	private ArrayAdapter<Tweet> adapter; // Controller
+	private Button saveButton;
 	private ArrayList<Tweet> tweets = new ArrayList<Tweet>(); // Model
+	private LonelyTwitterActivity activity = this;
 
+	public EditText getBodyText() {
+		return bodyText;
+	}
+	public ArrayList<Tweet> getTweets() {
+		return tweets;
+	}
+	public Button getSaveButton() {
+		return saveButton;
+	}
+	public ListView getOldTweetsList() {
+		return oldTweetsList;
+	}
 
 	/** Called when the activity is first created. */
 	@Override
@@ -40,7 +55,7 @@ public class LonelyTwitterActivity extends Activity {  // View/Controller
 		setContentView(R.layout.main); // View
 
 		bodyText = (EditText) findViewById(R.id.body);  // View
-		final Button saveButton = (Button) findViewById(R.id.save); // View/Controller
+		saveButton = (Button) findViewById(R.id.save);
 		Button clearButton = (Button) findViewById(R.id.clear); // View/Controller
 		oldTweetsList = (ListView) findViewById(R.id.oldTweetsList); // View
 
@@ -49,7 +64,7 @@ public class LonelyTwitterActivity extends Activity {  // View/Controller
 			public void onClick(View v) { // Controller
 				setResult(RESULT_OK); // Model
 				String text = bodyText.getText().toString(); // Model
-				tweetList.addTweet(new NormalTweet(text)); // Model
+				tweets.add(new NormalTweet(text)); // Model
 				saveInFile(); // Model
 				adapter.notifyDataSetChanged(); // Controller
 			}
@@ -68,6 +83,15 @@ public class LonelyTwitterActivity extends Activity {  // View/Controller
 				saveInFile(); // Model
 			}
 
+		});
+
+		oldTweetsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(activity, EditTweetActivity.class);
+				// Paresh Mayani, http://stackoverflow.com/questions/7074097/how-to-pass-integer-from-one-activity-to-another, 2015-10-14
+				intent.putExtra("editTweetIndex", position);
+				startActivity(intent);
+			}
 		});
 
 	}
@@ -114,4 +138,6 @@ public class LonelyTwitterActivity extends Activity {  // View/Controller
 			throw new RuntimeException(e);  // View
 		}
 	}
+
+
 }
